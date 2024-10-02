@@ -1,0 +1,43 @@
+API testing using python snd robot framework(https://www.youtube.com/watch?v=UbE_GsaAWvs&list=PLUDwpEzHYYLvMLbma_Rp-6jrrpxkeH0VJ&index=1)
+Video 1:- Environmental setup
+
+	Step 1): Pip install robotframework--> to install robot framework
+				pip show robotfrmework --> to show the deatails of robot framework
+				
+	2)		pip install requests
+	3)		pip install robotframework-requests
+	4)		pip install -U robotframework-jsonlibrary
+	
+	Download all these in cmd
+	
+	5) Add these packages in pycharm under file-->settings-->python interpriter-->packages--> +--> robotframework,robotframework-jsonlibrary,requests
+	robotframework-requests,jsonpath-rw,jsonpath-rw-ext
+	
+2) Get Requests:
+	Create a .robot file under Testcases directory
+	
+	Code:-	*** Settings ***
+			Library    RequestsLibrary
+			Library    Collections
+			
+			*** Variables ***
+			${base_url}    https://fakerestapi.azurewebsites.net
+
+			*** Test Cases ***
+			Get_request
+				Create Session   session    ${base_url}
+				${response}=    Get Request    session    /api/v1/Activities
+				Log To Console    ${response.status_code}
+			#    Log To Console    ${response.content}
+				Log To Console    ${response.headers}
+				
+				
+			# Validations
+				${status_code}=    Convert To String    ${response.status_code}
+				Should Be Equal    ${status_code}    200
+				${body}=    Convert To String    ${response.content}
+				Should Contain    ${body}    Activity 1
+				
+				${header_value}=    Get From Dictionary   ${response.headers}    Content-Type
+				Should Contain    ${header_value}   application/json
+				

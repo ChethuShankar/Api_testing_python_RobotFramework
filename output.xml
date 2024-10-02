@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.1 (Python 3.12.3 on win32)" generated="2024-09-28T15:29:13.172157" rpa="false" schemaversion="5">
+<suite id="s1" name="TC3 ChatGPT POst request" source="D:\Learnings\Robot_framework_api_automation\Testcases\TC3_ChatGPT_POst_request.robot">
+<test id="s1-t1" name="Validate Multiple User Logins From CSV" line="44">
+<kw name="Read Csv File To Associative" owner="CSVLibrary">
+<msg time="2024-09-28T15:29:14.857645" level="INFO">@{user_data} = [ {'name': 'chethan', 'job': 'engineer'} | {'name': 'ankitha', 'job': 'tester'} | {'name': 'shankar', 'job': 'doc'} ]</msg>
+<var>@{user_data}</var>
+<arg>input1.csv</arg>
+<arg>delimiter=,</arg>
+<doc>Read CSV file and return its content as a Python list of dictionaries.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.856181" elapsed="0.001464"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-09-28T15:29:14.858667" level="INFO">userdata:[{'name': 'chethan', 'job': 'engineer'}, {'name': 'ankitha', 'job': 'tester'}, {'name': 'shankar', 'job': 'doc'}]</msg>
+<arg>userdata:${user_data}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.857645" elapsed="0.001022"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>userdata:${user_data}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.858995" elapsed="0.000000"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>${row}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.860082" elapsed="0.001001"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2024-09-28T15:29:14.861083" level="INFO">${username} = chethan</msg>
+<var>${username}</var>
+<arg>${row}[name]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.861083" elapsed="0.000000"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2024-09-28T15:29:14.862108" level="INFO">${job} = engineer</msg>
+<var>${job}</var>
+<arg>${row}[job]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.861083" elapsed="0.001025"/>
+</kw>
+<kw name="Validate User Login and Extract User ID">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2024-09-28T15:29:14.862108" level="INFO">${PAYLOAD} = {'name': 'chethan', 'job': 'engineer'}</msg>
+<var>${PAYLOAD}</var>
+<arg>name=${username}</arg>
+<arg>job=${job}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2024-09-28T15:29:14.862108" elapsed="0.000000"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2024-09-28T15:29:14.862108" level="INFO">Creating Session using : alias=my_session, url=https://reqres.in/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>my_session</arg>
+<arg>${BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2024-09-28T15:29:14.862108" elapsed="0.000000"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2024-09-28T15:29:14.868873" level="FAIL">AttributeError: 'str' object has no attribute 'items'</msg>
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${ENDPOINT}</arg>
+<arg>headers=${HEADERS}</arg>
+<arg>json=${PAYLOAD}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="FAIL" start="2024-09-28T15:29:14.862108" elapsed="0.018567">AttributeError: 'str' object has no attribute 'items'</status>
+</kw>
+<kw name="Should Be Equal As Numbers" owner="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>201</arg>
+<doc>Fails if objects are unequal after converting them to real numbers.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.880675" elapsed="0.000000"/>
+</kw>
+<kw name="Convert To String" owner="BuiltIn">
+<var>${response_str}</var>
+<arg>${response.content}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.880675" elapsed="0.000000"/>
+</kw>
+<kw name="To Json" owner="RequestsLibrary">
+<msg time="2024-09-28T15:29:14.880675" level="WARN">Keyword 'RequestsLibrary.To Json' is deprecated. Please use ${resp.json()} instead. Have a look at the improved HTML output as pretty printing replacement.</msg>
+<var>${response_json}</var>
+<arg>${response_str}</arg>
+<doc>*DEPRECATED* Please use ${resp.json()} instead. Have a look at the improved HTML output as pretty printing replacement.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.880675" elapsed="0.002813"/>
+</kw>
+<kw name="Get From Dictionary" owner="Collections">
+<var>${user_id}</var>
+<arg>${response_json}</arg>
+<arg>id</arg>
+<doc>Returns a value from the given ``dictionary`` based on the given ``key``.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.883488" elapsed="0.000000"/>
+</kw>
+<kw name="Should Not Be Empty" owner="BuiltIn">
+<arg>${user_id}</arg>
+<doc>Verifies that the given item is not empty.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.883488" elapsed="0.000000"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${user_id} &gt; 0</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.884490" elapsed="0.000000"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>User ID: ${user_id} for username: ${username} was successfully validated.</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" start="2024-09-28T15:29:14.884490" elapsed="0.000000"/>
+</kw>
+<arg>${username}</arg>
+<arg>${job}</arg>
+<doc>Validates user login and extracts user_id from response.</doc>
+<status status="FAIL" start="2024-09-28T15:29:14.862108" elapsed="0.022382">AttributeError: 'str' object has no attribute 'items'</status>
+</kw>
+<var name="${row}">{'name': 'chethan', 'job': 'engineer'}</var>
+<status status="FAIL" start="2024-09-28T15:29:14.860082" elapsed="0.024408">AttributeError: 'str' object has no attribute 'items'</status>
+</iter>
+<var>${row}</var>
+<value>@{user_data}</value>
+<status status="FAIL" start="2024-09-28T15:29:14.859990" elapsed="0.024500">AttributeError: 'str' object has no attribute 'items'</status>
+</for>
+<doc>Validates multiple user logins and extracts user_id from the response.</doc>
+<status status="FAIL" start="2024-09-28T15:29:14.853137" elapsed="0.032348">AttributeError: 'str' object has no attribute 'items'</status>
+</test>
+<status status="FAIL" start="2024-09-28T15:29:13.177689" elapsed="1.709788"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="0" fail="1" skip="0" id="s1" name="TC3 ChatGPT POst request">TC3 ChatGPT POst request</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2024-09-28T15:29:14.880675" level="WARN">Keyword 'RequestsLibrary.To Json' is deprecated. Please use ${resp.json()} instead. Have a look at the improved HTML output as pretty printing replacement.</msg>
+</errors>
+</robot>
